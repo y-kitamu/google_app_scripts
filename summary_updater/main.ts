@@ -57,10 +57,10 @@ const getProfitLoss = (sheet: GoogleAppsScript.Spreadsheet.Sheet): number => {
 
 const getTargetRow = (sheet: GoogleAppsScript.Spreadsheet.Sheet): number => {
   const lastRow = sheet.getLastRow();
-  const lastRowValue = sheet.getRange(lastRow, 1).getRichTextValue();
+  const lastRowValue = sheet.getRange(lastRow, 1).getValue();
   if (lastRowValue === null) {
     return lastRow;
-  } else if (lastRowValue.getText() === getCurrentDateStr()) {
+  } else if (getCurrentDateStr(lastRowValue) === getCurrentDateStr()) {
     return lastRow;
   }
   return lastRow + 1;
@@ -86,8 +86,10 @@ const getTargetColumn = (
   return lastColumn + 1;
 };
 
-const getCurrentDateStr = (): string => {
-  const date = new Date();
+const getCurrentDateStr = (date?: Date): string => {
+  if (date === undefined || date === null) {
+    date = new Date();
+  }
   const dateStr = `${date.getFullYear()}/${
     date.getMonth() + 1
   }/${date.getDate()}`;
